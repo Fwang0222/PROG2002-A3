@@ -1,0 +1,69 @@
+<header class="header">
+  <div class="logo">
+    <img src="./images/logo.png" alt="Logo">
+    <div class="header-title">Charity Events</div>
+  </div>
+  <nav class="nav">
+    <a href="/">Home</a>
+    <a href="search.html" class="active">Search</a>
+  </nav>
+</header>
+
+<main class="container">
+  <section class="banner">
+    <div class="banner-inner">
+      <div>
+        <div class="title">Charity & Causes events</div>
+        <div class="sub-title">Welcome — together, we can make a difference.</div>
+        <div class="sub-title">Discover the best Charity & Causes events in your area and online</div>
+      </div>
+      <img class="charity-img" src="./images/charity_and_causes.webp" alt="Charity And Causes" />
+    </div>
+  </section>
+
+  <section class="charity-and-causes">
+    <div class="card">
+      <h1 class="h2" style="margin-top:0;">Search events</h1>
+      <p class="muted" style="margin-top:4px;">Filter by date range, city, and category.</p>
+
+      <form id="search-form" class="form">
+        <div class="form-row">
+          <label for="date_from">Date from</label>
+          <input id="date_from" name="date_from" type="date" />
+        </div>
+        <div class="form-row">
+          <label for="date_to">Date to</label>
+          <input id="date_to" name="date_to" type="date" />
+        </div>
+        <div class="form-row">
+          <label for="city">City</label>
+          <input id="city" name="city" type="text" placeholder="e.g. Sydney" />
+        </div>
+        <div class="form-row">
+          <label for="category_id">Category</label>
+          <select id="category_id" name="category_id">
+            <option value="">-- All --</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn">Search</button>
+          <button type="button" id="btn-clear" class="btn">Clear</button>
+        </div>
+      </form>
+    </div>
+
+    <div style="margin-top: 20px;">
+      <div class="row-between">
+        <h2 class="h2">Results</h2>
+        <span id="result-count" class="pill">0 events</span>
+      </div>
+
+      <div id="list-loading" class="notice" hidden>Searching…</div>
+      <div id="list-error" class="notice error" hidden>Sorry, something went wrong.</div>
+      <div id="list-empty" class="notice" hidden>No events matched your filters.</div>
+
+      <div id="cards" class="cards" hidden></div>
+    </div>
+  </section>
+
+</main>

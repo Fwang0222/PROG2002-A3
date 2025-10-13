@@ -1,0 +1,68 @@
+<header class="header">
+  <div class="logo">
+    <img src="./images/logo.png" alt="Logo">
+    <div class="header-title">Charity Events</div>
+  </div>
+  <nav class="nav">
+    <a href="/">Home</a>
+    <a href="search.html">Search</a>
+  </nav>
+</header>
+
+<main class="container">
+  <section class="banner">
+    <div class="banner-inner">
+      <div>
+        <div class="title">Charity & Causes events</div>
+        <div class="sub-title">Welcome — together, we can make a difference.</div>
+        <div class="sub-title">Discover the best Charity & Causes events in your area and online</div>
+      </div>
+      <img class="charity-img" src="./images/charity_and_causes.webp" alt="Charity And Causes" />
+    </div>
+  </section>
+
+  <section class="charity-and-causes">
+    <a class="btn" href="/" style="margin-bottom: 12px; display:inline-block;">Back to Home</a>
+
+    <div id="loading" class="notice">Loading event…</div>
+    <div id="notfound" class="notice" hidden>Event not found.</div>
+
+    <article id="detail" class="card" hidden>
+      <div id="banner">
+        <img id="img" class="thumb" alt="">
+      </div>
+
+      <div class="card-body">
+        <div class="meta" style="margin-bottom:6px;">
+          <span id="status" class="badge">Status</span>
+          <span id="when">-</span>
+          <span id="where">-</span>
+        </div>
+
+        <h1 id="title" class="title" style="font-size:22px;"></h1>
+
+        <p id="shortdesc" class="muted" style="margin:6px 0 10px;"></p>
+
+        <div id="desc" style="margin: 8px 0 10px; white-space: pre-line;"></div>
+
+        <div class="meta" style="margin-top:10px;flex-direction: column;font-size: 16px;">
+          <div><b>Venue:</b> <span id="venue">-</span></div>
+          <div><b>Address:</b> <span id="address">-</span></div>
+          <div><b>Ticket:</b> $<span id="price">0.00</span></div>
+          <div><b>Goal:</b> $<span id="goal">0.00</span></div>
+          <div><b>Raised:</b> $<span id="progress">0.00</span></div>
+
+          <div class="progress-container">
+            <div id="progress-bar" class="progress-bar"></div>
+          </div>
+          <p id="progress-text" class="progress-text"></p>
+
+        </div>
+
+        <div style="margin-top:12px;">
+          <button id="btn-register" class="btn" type="button">Register</button>
+        </div>
+      </div>
+    </article>
+  </section>
+</main>
