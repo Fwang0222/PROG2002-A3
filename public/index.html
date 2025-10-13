@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Charity Events - Home</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="logo">
+      <img src="./images/logo.png" alt="Logo">
+      <div class="header-title">Charity Events</div>
+    </div>
+    <nav class="nav">
+      <a href="/" class="active">Home</a>
+      <a href="search.html">Search</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="banner">
+      <div class="banner-inner">
+        <div>
+          <div class="title">Charity & Causes events</div>
+          <div class="sub-title">Welcome — together, we can make a difference.</div>
+          <div class="sub-title">Discover the best Charity & Causes events in your area and online</div>
+          <div class="sub-title">Contact: s.zhang.41@student.scu.edu.au</div>
+        </div>
+        <img class="charity-img" src="./images/charity_and_causes.webp" alt="Charity And Causes" />
+      </div>
+    </section>
+    <section class="charity-and-causes">
+      <div class="stats">
+        <div><strong>Total</strong>: <span id="total"></span></div>
+        <div><strong>Upcoming</strong>: <span id="upcoming"></span></div>
+        <div><strong>Past</strong>: <span id="past"></span></div>
+      </div>
+      <div id="charity_list" class="cards"></div>
+    </section>
+  </main>
+
+  <script>
+    function createCard(ev) {
+      // create card
+      const card = document.createElement('article');
+      card.className = 'card';
+
+      // create image
+      const img = document.createElement('img');
+      img.className = 'thumb';
+      img.alt = '';
+      img.src = ev.image_url;
+      card.appendChild(img);
+
+      // create card body
+      const body = document.createElement('div');
+      body.className = 'card-body';
+
+      // create status
+      const status = new Date(ev.end_datetime) < new Date() ? 'past' : 'upcoming';
+      const badge = document.createElement('span');
+      badge.className = 'badge ' + (status === 'past' ? 'badge-past' : 'badge-upcoming');
+      badge.textContent = status === 'past' ? 'Past' : 'Upcoming';
+
+      // create meta
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+      meta.appendChild(badge);
+      const when = document.createElement('span');
+      when.textContent = new Date(ev.start_datetime).toLocaleString(); // format date
+      meta.appendChild(when);
+      const where = document.createElement('span');
+      where.textContent = ev.location_city || '-';
+      meta.appendChild(where);
+      body.appendChild(meta);
+
+      // create title
+      const title = document.createElement('div');
+      title.className = 'title';
+      title.textContent = ev.name;
+      body.appendChild(title);
+
+      // create more button
+      const more = document.createElement('a');
+      more.className = 'btn';
+      more.href = 'details.html?id=' + encodeURIComponent(ev.id);
+      more.textContent = 'View details';
+      body.appendChild(more);
+
+      card.appendChild(body);
+      return card;
+    }
+
+    // request events when page load
+    fetch('/api/events')
+      .then(res => res.json())
+      .then(res => {
+        if (res && res.length > 0) {
+          const charityList = document.getElementById('charity_list')
+          const total = document.getElementById('total')
+          const upcoming = document.getElementById('upcoming')
+          const past = document.getElementById('past')
+
+          // loop response and create card for each event
+          for (let i = 0; i < res.length; i++) {
+            const card = createCard(res[i])
+            charityList.append(card)
+          }
+
+          // set upcoming/past count
+          const upcomingCount = res.filter(ev => new Date(ev.end_datetime) >= new Date()).length
+          total.innerText = res.length
+          upcoming.innerText = upcomingCount
+          past.innerText = res.length - upcomingCount
+        }
+      })
+      .catch(e => {
+        console.log(e)
+      })
+  </script>
+</body>
+
+</html>

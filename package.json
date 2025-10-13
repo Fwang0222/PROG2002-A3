@@ -1,0 +1,26 @@
+{
+  "name": "prog2002-assessment2",
+  "version": "1.0.0",
+  "main": "database.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SuyaZhang32/PROG2002-Assessment2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SuyaZhang32/PROG2002-Assessment2/issues"
+  },
+  "homepage": "https://github.com/SuyaZhang32/PROG2002-Assessment2#readme",
+  "description": "",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0",
+    "mysql2": "^3.15.1"
+  }
+}
