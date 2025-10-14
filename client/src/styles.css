@@ -130,7 +130,7 @@
 
 .thumb {
   width: 100%;
-  height: 500px;
+  height: 180px;
   object-fit: cover;
   border-radius: 6px;
 }
@@ -223,6 +223,8 @@
 
 .form-row input[type="date"],
 .form-row input[type="text"],
+.form-row input[type="number"],
+.form-row input[type="email"],
 .form-row select {
   padding: 8px 10px;
   border-radius: 8px;
@@ -234,6 +236,8 @@
 
 .form-row input[type="date"]:focus,
 .form-row input[type="text"]:focus,
+.form-row input[type="number"]:focus,
+.form-row input[type="email"]:focus,
 .form-row select:focus {
   border-color: #3160cc;
   box-shadow: 0 0 0 2px rgba(49, 96, 204, 0.15);
@@ -260,6 +264,12 @@
   border-color: #d1434a;
   background: #fff5f6;
   color: #a12a31;
+}
+
+.notice.success {
+  border-color: #43d145;
+  background: #f5fff5;
+  color: #40a12a;
 }
 
 .progress-container {

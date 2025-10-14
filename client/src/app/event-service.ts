@@ -75,4 +75,9 @@ export class EventService {
   getCategories(): Observable<Category[]> {
     return this.http.get<Category[]>(`${this.HOST}/api/categories`)
   }
+
+  // create registration for event
+  createRegistration(eventId: number, registration: { full_name: string, email: string, phone: string, tickets_qty: number }): Observable<any> {
+    return this.http.post<any>(`${this.HOST}/api/events/${eventId}/registrations`, registration)
+  }
 }

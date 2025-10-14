@@ -1,0 +1,103 @@
+<app-navigation />
+
+<main class="container">
+  <section class="banner">
+    <div class="banner-inner">
+      <div>
+        <div class="title">Charity & Causes events</div>
+        <div class="sub-title">Welcome — together, we can make a difference.</div>
+        <div class="sub-title">Discover the best Charity & Causes events in your area and online</div>
+      </div>
+      <img class="charity-img" src="/images/charity_and_causes.webp" alt="Charity And Causes" />
+    </div>
+  </section>
+
+  <section class="charity-and-causes">
+    <a class="btn" [routerLink]="'/details/' + event?.id" style="margin-bottom: 12px; display:inline-block;">Back to Event</a>
+
+    <div class="row">
+      <div class="left">
+        <div *ngIf="showLoading" id="loading" class="notice">Loading event…</div>
+        <div *ngIf="showNotFound" id="notfound" class="notice">Event not found.</div>
+        <article *ngIf="event" id="detail" class="card">
+          <div id="banner">
+            <img id="img" class="thumb" [src]="event!.image_url" [alt]="event!.name">
+          </div>
+
+          <div class="card-body">
+            <div class="meta" style="margin-bottom:6px;">
+              <span id="status" class="badge badge-{{getStatus(event)}}">{{getStatus(event)}}</span>
+              <span id="when">{{ event!.start_datetime | date:'medium'  }}</span>
+              <span id="where">{{ event!.location_city || '-' }}</span>
+            </div>
+
+            <h1 id="title" class="title" style="font-size:22px;">{{event!.name}}</h1>
+
+            <p id="shortdesc" class="muted" style="margin:6px 0 10px;">{{event!.short_description}}</p>
+
+            <div id="desc" style="margin: 8px 0 10px; white-space: pre-line;">{{event!.description}}</div>
+
+            <div class="meta" style="margin-top:10px;flex-direction: column;font-size: 16px;">
+              <div><b>Venue: </b> <span id="venue">{{event!.location_venue}}</span></div>
+              <div><b>Address: </b> <span id="address">{{event!.address_line}}</span></div>
+              <div><b>Ticket: </b> <span id="price">{{event!.ticket_price | currency}}</span></div>
+              <div><b>Goal: </b> <span id="goal">{{event!.goal_amount | currency}}</span></div>
+              <div><b>Raised: </b> <span id="progress">{{event!.progress_amount | currency}}</span></div>
+
+              <div class="progress-container">
+                <div id="progress-bar" class="progress-bar" [style.width]="(event!.goal_amount > 0 ? (event!.progress_amount / event!.goal_amount * 100).toFixed(2) : 0) + '%'"></div>
+              </div>
+              <p id="progress-text" class="progress-text">Progress: {{(event!.goal_amount > 0 ? (event!.progress_amount / event!.goal_amount * 100).toFixed(2) : 0)}}% of goal reached</p>
+
+            </div>
+
+
+          </div>
+        </article>
+      </div>
+
+      <div class="right">
+        <!-- registration form -->
+        <div class="card" *ngIf="!showSuccess">
+          <h2 class="h2" style="margin-top:0;">Registration</h2>
+          <p class="muted" style="margin-top:4px;">Please fill in your details below.</p>
+
+          <form id="registration-form" class="form" (ngSubmit)="submit()" #f="ngForm">
+            <div class="form-row">
+              <label for="full_name">Full name</label>
+              <input id="full_name" name="full_name" type="text" required maxlength="120" [(ngModel)]="form.full_name" />
+            </div>
+
+            <div class="form-row">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" required maxlength="160" [(ngModel)]="form.email" />
+            </div>
+
+            <div class="form-row">
+              <label for="phone">Phone (optional)</label>
+              <input id="phone" name="phone" type="text" maxlength="40" [(ngModel)]="form.phone" />
+            </div>
+
+            <div class="form-row">
+              <label for="tickets_qty">Tickets</label>
+              <input id="tickets_qty" name="tickets_qty" type="number" required min="1" [(ngModel)]="form.tickets_qty" />
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn">Submit</button>
+              <button type="button" class="btn" [routerLink]="'/details/' + event?.id">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <div *ngIf="showSubmitLoading" id="submit_loading" class="notice">Submitting…</div>
+        <div *ngIf="showError" id="error" class="notice error">{{ errorMsg }}</div>
+        <div *ngIf="showSuccess" id="success" class="notice success">
+          Registration created successfully.
+          <a class="btn" [routerLink]="'/details/' + event?.id" style="margin-top:8px;">Back to Details</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>

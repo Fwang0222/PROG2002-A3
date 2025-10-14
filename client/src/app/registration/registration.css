@@ -1,0 +1,23 @@
+.row {
+  display: flex;
+  gap: 10px;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.left {
+  flex: 1
+}
+
+.right {
+  width: 300px;
+}
+
+.thumb {
+  height: 500px;
+}

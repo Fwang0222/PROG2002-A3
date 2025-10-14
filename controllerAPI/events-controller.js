@@ -147,7 +147,7 @@ router.post('/:id/registrations', (req, res, next) => {
   }
 
   // fetch event to get ticket_price & suspended
-  const sqlEvent = `SELECT id, ticket_price, suspended FROM eventsWHERE id = ?`;
+  const sqlEvent = `SELECT id, ticket_price, suspended FROM events WHERE id = ?`;
 
   conn.execute(sqlEvent, [eventId], (err, rows) => {
     if (err) return next(err);
