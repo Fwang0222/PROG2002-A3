@@ -94,7 +94,120 @@ router.get('/:id', (req, res, next) => {
 
   conn.execute(sql, [id], (err, rows) => {
     if (err) return next(err);
-    res.json({ data: rows[0], error: null });
+
+    // Query registrations list
+    const sqlRegs = `
+      SELECT id, full_name, email, phone, tickets_qty,
+             registration_datetime, amount_paid
+      FROM registrations
+      WHERE event_id = ?
+      ORDER BY registration_datetime DESC
+    `;
+
+    conn.execute(sqlRegs, [id], (rErr, regRows) => {
+      if (rErr) return next(rErr);
+
+      return res.json({
+        data: {
+          ...rows[0],
+          registrations: regRows || [],
+        },
+        error: null
+      });
+    });
+  });
+});
+
+// Add registrations for event
+router.post('/:id/registrations', (req, res, next) => {
+  // validate path param
+  const eventId = Number.parseInt(req.params.id, 10);
+  if (!Number.isFinite(eventId) || eventId <= 0) {
+    return res.status(400).json({
+      data: null,
+      error: {
+        code: 'BAD_REQUEST',
+        message: 'Invalid event id'
+      }
+    });
+  }
+
+  // validate body
+  const { full_name, email, phone, tickets_qty } = req.body || {};
+  const qty = Number.parseInt(tickets_qty, 10);
+
+  if (!full_name || !email || !Number.isFinite(qty) || qty < 1) {
+    return res.status(400).json({
+      data: null,
+      error: {
+        code: 'BAD_REQUEST',
+        message: 'full_name, email, tickets_qty (>=1) are required'
+      }
+    });
+  }
+
+  // fetch event to get ticket_price & suspended
+  const sqlEvent = `SELECT id, ticket_price, suspended FROM eventsWHERE id = ?`;
+
+  conn.execute(sqlEvent, [eventId], (err, rows) => {
+    if (err) return next(err);
+
+    if (!rows || rows.length === 0) {
+      return res.status(404).json({
+        data: null,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Event not found'
+        }
+      });
+    }
+
+    const event = rows[0];
+    if (event.suspended === 1) {
+      return res.status(400).json({
+        data: null,
+        error: {
+          code: 'EVENT_SUSPENDED',
+          message: 'Event is suspended'
+        }
+      });
+    }
+
+    // compute amount_paid on server side
+    const amountPaid = Number((event.ticket_price * qty).toFixed(2));
+
+    // insert registration
+    const sqlInsert = `INSERT INTO registrations (event_id, full_name, email, phone, tickets_qty, amount_paid) VALUES (?, ?, ?, ?, ?, ?)`;
+
+    conn.execute(sqlInsert, [eventId, full_name, email, phone, qty, amountPaid], (insErr, result) => {
+      if (insErr) {
+        // handle duplicate (event_id, email) unique violation
+        if (insErr.code === 'ER_DUP_ENTRY') {
+          return res.status(409).json({
+            data: null,
+            error: {
+              code: 'DUPLICATE_REGISTRATION',
+              message: 'This email has already registered for this event'
+            }
+          });
+        }
+        return next(insErr);
+      }
+
+      // return created resource
+      return res.status(201).json({
+        data: {
+          id: result.insertId,
+          event_id: eventId,
+          full_name,
+          email: email,
+          phone: phone,
+          tickets_qty: qty,
+          amount_paid: amountPaid
+        },
+        error: null
+      });
+    });
   });
 });
 
