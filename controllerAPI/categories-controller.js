@@ -65,4 +65,71 @@ router.post('/', (req, res, next) => {
   });
 });
 
+// update category
+router.put('/:id', (req, res, next) => {
+  const id = Number.parseInt(req.params.id, 10);
+  if (!Number.isFinite(id) || id <= 0) {
+    return res.status(400).json({
+      data: null,
+      error: { code: 'BAD_REQUEST', message: 'Invalid id' },
+    });
+  }
+
+  const { name, description } = req.body;
+
+  // name and description required
+  if (!name) {
+    return res.status(400).json({
+      data: null,
+      error: { code: 'BAD_REQUEST', message: 'Name required' },
+    });
+  }
+
+  // name length should lower than 100
+  if (name.length > 100) {
+    res.status(400).json({
+      data: null,
+      error: { code: 'BAD_REQUEST', message: 'name too long (max 100)' },
+    });
+  }
+  // description length should lower than 255
+  if (description && description.length > 255) {
+    res.status(400).json({
+      data: null,
+      error: { code: 'BAD_REQUEST', message: 'description too long (max 255)' },
+    });
+  }
+
+  // update sql
+  const sql = `UPDATE categories SET name = ?, description = ? WHERE id = ?`;
+
+  conn.execute(sql, [name, description, id], (err, result) => {
+    if (err) {
+      // Unique key conflict
+      if (err.code === 'ER_DUP_ENTRY') {
+        return res.status(409).json({
+          data: null,
+          error: {
+            code: 'DUPLICATE_NAME',
+            message: 'Category name already exists'
+          },
+        });
+      }
+      return next(err);
+    }
+    // not affected any rows
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        data: null,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Category not found'
+        },
+      });
+    } else {
+      res.status(204).send()
+    }
+  });
+});
+
 module.exports = router;
