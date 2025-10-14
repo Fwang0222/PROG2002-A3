@@ -2,6 +2,17 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
+export interface Registration {
+  id: number;
+  event_id: number;
+  full_name: number;
+  email: number;
+  phone: number;
+  tickets_qty: number;
+  registration_datetime: Date;
+  amount_paid: number;
+}
+
 export interface Event {
   id: number;
   category_id: number;
@@ -20,6 +31,7 @@ export interface Event {
   suspended: number;
   created_at: Date;
   updated_at: Date;
+  registrations: Registration[];
 }
 
 export interface Category {

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Navigation} from '../navigation/navigation';
-import {ActivatedRoute, RouterModule} from '@angular/router';
+import {ActivatedRoute, Router, RouterModule} from '@angular/router';
 import {EventService, Event} from '../event-service';
 import {CommonModule} from '@angular/common';
 
@@ -15,7 +15,11 @@ export class Details implements OnInit {
   showLoading = false
   showNotFound = false;
 
-  constructor(private eventService: EventService, private route: ActivatedRoute) {
+  constructor(
+    private eventService: EventService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
   }
 
   ngOnInit(): void {
@@ -52,6 +56,7 @@ export class Details implements OnInit {
 
   // add event listener for register button
   register(): void {
-    alert("Registration is under construction.")
+    // alert("Registration is under construction.")
+    this.router.navigate(['/registration', this.event?.id])
   }
 }

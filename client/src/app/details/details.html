@@ -56,4 +56,35 @@
       </div>
     </article>
   </section>
+
+  <!-- Registrations list -->
+  <section *ngIf="event" id="registrations" class="charity-and-causes">
+    <div class="card">
+      <h2 class="title" style="font-size:18px; margin-bottom:8px;">All Registrations</h2>
+
+      <div *ngIf="event.registrations?.length === 0" class="notice">No registrations yet.</div>
+
+      <div *ngIf="event.registrations?.length">
+        <div class="table" role="table" style="width:100%; overflow:auto;">
+          <div class="thead" role="row">
+            <div>Name</div>
+            <div>Email</div>
+            <div>Tickets</div>
+            <div>Paid</div>
+            <div>Registered At</div>
+          </div>
+
+          <div class="tbody" role="rowgroup">
+            <div *ngFor="let r of event.registrations" role="row">
+              <div>{{ r.full_name }}</div>
+              <div>{{ r.email }}</div>
+              <div>{{ r.tickets_qty }}</div>
+              <div>{{ r.amount_paid | currency }}</div>
+              <div>{{ r.registration_datetime | date:'medium' }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
