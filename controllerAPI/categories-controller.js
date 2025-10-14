@@ -117,18 +117,41 @@ router.put('/:id', (req, res, next) => {
       }
       return next(err);
     }
-    // not affected any rows
-    if (result.affectedRows === 0) {
-      return res.status(404).json({
-        data: null,
-        error: {
-          code: 'NOT_FOUND',
-          message: 'Category not found'
-        },
-      });
-    } else {
-      res.status(204).send()
+    // success updated
+    res.status(204).send()
+  });
+});
+
+// delete category
+router.delete('/:id', (req, res, next) => {
+  const id = Number.parseInt(req.params.id, 10);
+  if (!Number.isFinite(id) || id <= 0) {
+    return res.status(400).json({
+      data: null,
+      error: { code: 'BAD_REQUEST', message: 'Invalid id' },
+    });
+  }
+
+  // delete sql
+  const sql = `DELETE FROM categories WHERE id = ?`;
+  conn.execute(sql, [id], (err, result) => {
+    if (err) {
+      // The referenced constraint caused a foreign key error
+      if (err.code === 'ER_ROW_IS_REFERENCED_2' || err.code === 'ER_ROW_IS_REFERENCED') {
+        return res.status(409).json({
+          data: null,
+          error: {
+            code: 'CATEGORY_IN_USE',
+            message: 'Cannot delete: category is referenced by one or more events',
+          },
+        });
+      }
+      return next(err);
     }
+    return res.json({
+      data: { id },
+      error: null
+    });
   });
 });
 
