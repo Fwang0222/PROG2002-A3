@@ -17,28 +17,29 @@
       <h1 class="h2" style="margin-top:0;">Search events</h1>
       <p class="muted" style="margin-top:4px;">Filter by date range, city, and category.</p>
 
-      <form id="search-form" class="form">
+      <form id="search-form" class="form" (ngSubmit)="submit()">
         <div class="form-row">
           <label for="date_from">Date from</label>
-          <input id="date_from" name="date_from" type="date" />
+          <input id="date_from" name="date_from" type="date" [(ngModel)]="searchForm.date_from" />
         </div>
         <div class="form-row">
           <label for="date_to">Date to</label>
-          <input id="date_to" name="date_to" type="date" />
+          <input id="date_to" name="date_to" type="date" [(ngModel)]="searchForm.date_to" />
         </div>
         <div class="form-row">
           <label for="city">City</label>
-          <input id="city" name="city" type="text" placeholder="e.g. Sydney" />
+          <input id="city" name="city" type="text" placeholder="e.g. Sydney" [(ngModel)]="searchForm.city" />
         </div>
         <div class="form-row">
           <label for="category_id">Category</label>
-          <select id="category_id" name="category_id">
+          <select id="category_id" name="category_id" [(ngModel)]="searchForm.category">
             <option value="">-- All --</option>
+            <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
           </select>
         </div>
         <div class="form-actions">
           <button type="submit" class="btn">Search</button>
-          <button type="button" id="btn-clear" class="btn">Clear</button>
+          <button type="button" id="btn-clear" class="btn" (click)="clearSearch()">Clear</button>
         </div>
       </form>
     </div>
@@ -46,14 +47,27 @@
     <div style="margin-top: 20px;">
       <div class="row-between">
         <h2 class="h2">Results</h2>
-        <span id="result-count" class="pill">0 events</span>
+        <span id="result-count" class="pill">{{this.events.length + (this.events.length === 1 ? ' event' : ' events')}}</span>
       </div>
 
-      <div id="list-loading" class="notice" hidden>Searching…</div>
-      <div id="list-error" class="notice error" hidden>Sorry, something went wrong.</div>
-      <div id="list-empty" class="notice" hidden>No events matched your filters.</div>
+      <div *ngIf="showListLoading" id="list-loading" class="notice">Searching…</div>
+      <div *ngIf="showListError" id="list-error" class="notice error">Sorry, something went wrong.</div>
+      <div *ngIf="showListEmpty" id="list-empty" class="notice">No events matched your filters.</div>
 
-      <div id="cards" class="cards" hidden></div>
+      <div id="cards" class="cards">
+        <article class="card" *ngFor="let event of events">
+          <img class="thumb" [alt]="event.name" [src]="event.image_url">
+          <div class="card-body">
+            <div class="meta">
+              <span class="badge badge-{{getStatus(event)}}">{{getStatus(event)}}</span>
+              <span>{{ event.start_datetime | date:'medium'  }}</span>
+              <span>{{ event.location_city || '-' }}</span>
+            </div>
+            <div class="title">{{event.name}}</div>
+            <a class="btn" [routerLink]="'/details/' + event.id">View details</a>
+          </div>
+        </article>
+      </div>
     </div>
   </section>
 

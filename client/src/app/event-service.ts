@@ -22,22 +22,29 @@ export interface Event {
   updated_at: Date;
 }
 
+export interface Category {
+  id: number;
+  name: string;
+  description: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class EventService {
-  HOST = 'http://localhost:3060'
+  HOST = 'http://localhost:3060' // API HOST
 
   constructor(private http: HttpClient) {
   }
 
-
+  // get all events
   getEvents(): Observable<Event[]> {
     return this.http.get<Event[]>(`${this.HOST}/api/events`)
   }
 
-  searchEvents(dateFrom: string, dateTo: string, location: string, category: number): Observable<Event[]> {
-    return this.http.get<Event[]>(`${this.HOST}/api/events`, {
+  // search events
+  searchEvents(dateFrom: string, dateTo: string, location: string, category: string): Observable<Event[]> {
+    return this.http.get<Event[]>(`${this.HOST}/api/events/search`, {
       params: {
         date_from: dateFrom,
         date_to: dateTo,
@@ -47,7 +54,13 @@ export class EventService {
     })
   }
 
+  // get event by id
   getEventById(id: number): Observable<Event | null> {
     return  this.http.get<Event | null>(`${this.HOST}/api/events/${id}`)
+  }
+
+  // get all categories
+  getCategories(): Observable<Category[]> {
+    return this.http.get<Category[]>(`${this.HOST}/api/categories`)
   }
 }
