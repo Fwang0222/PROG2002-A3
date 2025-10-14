@@ -6,6 +6,7 @@ const cors = require('cors');
 const app = express();
 const eventAPI = require('./controllerAPI/events-controller');
 const categoryAPI = require('./controllerAPI/categories-controller');
+const registrationAPI = require('./controllerAPI/registrations-controller');
 
 // Middleware that can be used to enable CORS
 app.use(cors());
@@ -20,6 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // add api routes
 app.use('/api/categories', categoryAPI);
 app.use('/api/events', eventAPI);
+app.use('/api/registrations', registrationAPI);
 
 // add 404 processing pages
 app.use((req, res) => {
