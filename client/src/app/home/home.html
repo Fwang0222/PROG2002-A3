@@ -23,10 +23,23 @@
   </section>
   <section class="charity-and-causes">
     <div class="stats">
-      <div><strong>Total</strong>: <span id="total"></span></div>
-      <div><strong>Upcoming</strong>: <span id="upcoming"></span></div>
-      <div><strong>Past</strong>: <span id="past"></span></div>
+      <div><strong>Total</strong>: <span id="total">{{events.length}}</span></div>
+      <div><strong>Upcoming</strong>: <span id="upcoming">{{getUpcomingCount()}}</span></div>
+      <div><strong>Past</strong>: <span id="past"></span>{{events.length - getUpcomingCount()}}</div>
     </div>
-    <div id="charity_list" class="cards"></div>
+    <div id="charity_list" class="cards">
+      <article class="card" *ngFor="let event of events">
+        <img class="thumb" [alt]="event.name" [src]="event.image_url">
+        <div class="card-body">
+          <div class="meta">
+            <span class="badge badge-{{getStatus(event)}}">{{getStatus(event)}}</span>
+            <span>{{ event.start_datetime | date:'medium'  }}</span>
+            <span>{{ event.location_city || '-' }}</span>
+          </div>
+          <div class="title">{{event.name}}</div>
+          <a class="btn" [routerLink]="'/details/' + event.id">View details</a>
+        </div>
+      </article>
+    </div>
   </section>
 </main>
