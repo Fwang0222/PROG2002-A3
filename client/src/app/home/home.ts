@@ -2,10 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {EventService, Event} from '../event-service';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
+import {Navigation} from '../navigation/navigation';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, Navigation],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })

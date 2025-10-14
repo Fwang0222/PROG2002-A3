@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import {Navigation} from '../navigation/navigation';
 
 @Component({
   selector: 'app-search',
-  imports: [],
+  imports: [Navigation],
   templateUrl: './search.html',
   styleUrl: './search.css'
 })
