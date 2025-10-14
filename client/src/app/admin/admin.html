@@ -1,6 +1,12 @@
 <app-navigation />
 
 <main class="container">
-
+  <nav class="nav">
+    <a routerLink="/admin/categories" routerLinkActive="active">Categories</a>
+    <a routerLink="/admin/events" routerLinkActive="active">Events</a>
+  </nav>
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
 </main>
 
