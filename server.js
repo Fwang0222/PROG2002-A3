@@ -2,9 +2,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const cors = require('cors');
 const app = express();
 const eventAPI = require('./controllerAPI/events-controller');
 const categoryAPI = require('./controllerAPI/categories-controller');
+
+// Middleware that can be used to enable CORS
+app.use(cors());
 
 // Introduce the API controller
 app.use(bodyParser.json());
