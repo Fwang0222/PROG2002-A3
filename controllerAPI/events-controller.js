@@ -253,9 +253,68 @@ router.post('/', (req, res, next) => {
       }
       return next(err);
     }
+    // success create
+    res.status(201).json({
+      id: result.insertId,
+      ...params
+    })
+  });
+});
+
+// update event
+router.put('/:id', (req, res, next) => {
+  const id = Number.parseInt(req.params.id, 10);
+  if (!Number.isFinite(id) || id <= 0) {
+    return res.status(400).json({
+      data: null,
+      error: { code: 'BAD_REQUEST', message: 'Invalid id' },
+    });
+  }
+
+  const {
+    category_id, name, short_description, description, start_datetime,
+    end_datetime, location_city, location_venue, address_line, ticket_price,
+    goal_amount, progress_amount, image_url, suspended
+  } = req.body;
+
+  // check missing fields
+  if (!category_id || !name || !start_datetime || !end_datetime || !location_city || !location_venue || !address_line || !goal_amount) {
+    return res.status(400).json({
+      data: null,
+      error: { code: 'BAD_REQUEST', message: 'Missing some fields.' },
+    });
+  }
+
+  // UPDATE event sql
+  const sql = `
+    UPDATE events SET 
+    category_id = ?, name = ?, short_description = ?, description = ?, start_datetime = ?, end_datetime = ?, location_city = ?, location_venue = ?, address_line = ?, ticket_price = ?, goal_amount = ?, progress_amount = ?, image_url = ?, suspended = ?
+    WHERE id = ?
+  `;
+
+  const params = [
+    category_id, name, short_description, description, start_datetime, end_datetime, location_city,
+    location_venue, address_line, ticket_price, goal_amount, progress_amount, image_url, suspended, req.params.id
+  ];
+
+  conn.execute(sql, params, (err, result) => {
+    if (err) {
+      // Foreign key error: Category does not exist
+      if (err.code === 'ER_NO_REFERENCED_ROW_2' || err.code === 'ER_NO_REFERENCED_ROW') {
+        return res.status(400).json({
+          data: null,
+          error: {
+            code: 'CATEGORY_NOT_FOUND',
+            message: 'category_id not found'
+          }
+        });
+      }
+      return next(err);
+    }
     // success updated
     res.status(204).send()
   });
 });
+
 
 module.exports = router;
