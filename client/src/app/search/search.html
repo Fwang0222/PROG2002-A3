@@ -56,7 +56,7 @@
 
       <div id="cards" class="cards">
         <article class="card" *ngFor="let event of events">
-          <img class="thumb" [alt]="event.name" [src]="event.image_url">
+          <img class="thumb" [alt]="event.name" [src]="event.image_url || '/images/event_placeholder.jpg'">
           <div class="card-body">
             <div class="meta">
               <span class="badge badge-{{getStatus(event)}}">{{getStatus(event)}}</span>

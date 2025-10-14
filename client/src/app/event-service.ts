@@ -50,8 +50,16 @@ export class EventService {
   }
 
   // get all events
-  getEvents(): Observable<Event[]> {
-    return this.http.get<Event[]>(`${this.HOST}/api/events`)
+  getEvents(withSuspended: boolean = false): Observable<Event[]> {
+    let params = {}
+    if (withSuspended) {
+      params = {
+        withSuspended: true
+      }
+    }
+    return this.http.get<Event[]>(`${this.HOST}/api/events`, {
+      params
+    })
   }
 
   // search events

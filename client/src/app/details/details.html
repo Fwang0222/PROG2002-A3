@@ -20,7 +20,7 @@
 
     <article *ngIf="event" id="detail" class="card">
       <div id="banner">
-        <img id="img" class="thumb" [src]="event!.image_url" [alt]="event!.name">
+        <img id="img" class="thumb" [src]="event!.image_url || '/images/event_placeholder.jpg'" [alt]="event!.name">
       </div>
 
       <div class="card-body">

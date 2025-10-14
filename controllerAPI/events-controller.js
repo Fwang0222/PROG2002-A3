@@ -11,8 +11,9 @@ router.get('/', (req, res, next) => {
   let where = withSuspended ? '' : 'WHERE suspended = 0'
   // create sql for select event fields that suspended should be 1 and order by start date
   const sql = `
-    SELECT id, name, category_id, start_datetime, end_datetime,
-           location_city, location_venue, image_url, ticket_price
+    SELECT id, category_id, name, short_description, description,
+           start_datetime, end_datetime, location_city, location_venue, address_line,
+           ticket_price, goal_amount, progress_amount, image_url, suspended
     FROM events
     ${where}
     ORDER BY start_datetime DESC

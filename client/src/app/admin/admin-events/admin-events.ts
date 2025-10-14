@@ -71,7 +71,7 @@ export class AdminEvents {
     // call service to get events
     this.clearNotices();
     this.loading = true;
-    this.eventService.getEvents().subscribe({
+    this.eventService.getEvents(true).subscribe({
       next: (res: any) => {
         this.events = res;
         this.loading = false;
