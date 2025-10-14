@@ -99,7 +99,7 @@ export class Registration {
     this.showSubmitLoading = true;
 
     // call service to create registration
-    this.eventService.createRegistration(this.event!.id, {
+    this.eventService.createRegistration(this.event!.id!, {
       full_name,
       email,
       phone: phone,

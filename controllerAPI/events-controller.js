@@ -7,12 +7,14 @@ conn.connect();
 
 // get all events
 router.get('/', (req, res, next) => {
+  const { withSuspended } = req.query
+  let where = withSuspended ? '' : 'WHERE suspended = 0'
   // create sql for select event fields that suspended should be 1 and order by start date
   const sql = `
     SELECT id, name, category_id, start_datetime, end_datetime,
            location_city, location_venue, image_url, ticket_price
     FROM events
-    WHERE suspended = 0
+    ${where}
     ORDER BY start_datetime DESC
   `;
 
@@ -220,7 +222,7 @@ router.post('/', (req, res, next) => {
   } = req.body;
 
   // check missing fields
-  if (!category_id || !name || !start_datetime || !end_datetime || !location_city || !location_venue || !address_line || !goal_amount) {
+  if (!category_id || !name || !start_datetime) {
     return res.status(400).json({
       data: null,
       error: { code: 'BAD_REQUEST', message: 'Missing some fields.' },
@@ -235,7 +237,7 @@ router.post('/', (req, res, next) => {
   `;
 
   const params = [
-    category_id, name, short_description, description, start_datetime, end_datetime, location_city,
+    category_id, name, short_description, description, start_datetime.slice(0, 19).replace('T', ' '), end_datetime ? end_datetime.slice(0, 19).replace('T', ' ') : null, location_city,
     location_venue, address_line, ticket_price, goal_amount, progress_amount, image_url, suspended
   ];
 
@@ -278,7 +280,7 @@ router.put('/:id', (req, res, next) => {
   } = req.body;
 
   // check missing fields
-  if (!category_id || !name || !start_datetime || !end_datetime || !location_city || !location_venue || !address_line || !goal_amount) {
+  if (!category_id || !name || !start_datetime) {
     return res.status(400).json({
       data: null,
       error: { code: 'BAD_REQUEST', message: 'Missing some fields.' },
@@ -293,7 +295,7 @@ router.put('/:id', (req, res, next) => {
   `;
 
   const params = [
-    category_id, name, short_description, description, start_datetime, end_datetime, location_city,
+    category_id, name, short_description, description, start_datetime.slice(0, 19).replace('T', ' '), end_datetime ? end_datetime.slice(0, 19).replace('T', ' ') : null, location_city,
     location_venue, address_line, ticket_price, goal_amount, progress_amount, image_url, suspended, id
   ];
 

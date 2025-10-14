@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
 export interface Registration {
-  id: number;
+  id?: number;
   event_id: number;
   full_name: number;
   email: number;
@@ -14,7 +14,7 @@ export interface Registration {
 }
 
 export interface Event {
-  id: number;
+  id?: number;
   category_id: number;
   name: string;
   short_description: string;
@@ -29,9 +29,9 @@ export interface Event {
   progress_amount: number;
   image_url: number;
   suspended: number;
-  created_at: Date;
-  updated_at: Date;
-  registrations: Registration[];
+  created_at?: Date;
+  updated_at?: Date;
+  registrations?: Registration[];
 }
 
 export interface Category {
@@ -79,5 +79,20 @@ export class EventService {
   // create registration for event
   createRegistration(eventId: number, registration: { full_name: string, email: string, phone: string, tickets_qty: number }): Observable<any> {
     return this.http.post<any>(`${this.HOST}/api/events/${eventId}/registrations`, registration)
+  }
+
+  // create event
+  createEvent(body: Event): Observable<any> {
+    return this.http.post<any>(`${this.HOST}/api/events`, body)
+  }
+
+  // update category
+  updateEvent(eventId: number, body: Event): Observable<any> {
+    return this.http.put<any>(`${this.HOST}/api/events/${eventId}`, body)
+  }
+
+  // delete event by id
+  deleteEvent(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.HOST}/api/events/${id}`)
   }
 }

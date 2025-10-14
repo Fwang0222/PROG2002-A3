@@ -1,1 +1,125 @@
-<p>admin-events works!</p>
+<section>
+  <div class="table-desc" style="margin:6px 0 8px;">
+    <h2 class="h2" style="margin:0;">Events</h2>
+    <div class="row-between">
+      <span class="pill">{{events.length}} items</span>
+      <button type="submit" class="btn" (click)="openCreateModal()">Create</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="notice">Loading…</div>
+  <div *ngIf="error" class="notice error">{{error}}</div>
+  <div *ngIf="success" class="notice success">{{success}}</div>
+
+  <div class="card">
+    <div class="table" role="table">
+      <div class="thead" role="row">
+        <div>ID</div>
+        <div>Name</div>
+        <div>City / Venue</div>
+        <div>Start</div>
+        <div>Susp.</div>
+        <div>Actions</div>
+      </div>
+      <div class="tbody" role="rowgroup">
+        <div *ngFor="let e of events;" role="row">
+          <div>{{e.id}}</div>
+          <div>{{e.name}}</div>
+          <div class="muted">{{e.location_city || '-' }} / {{ e.location_venue || '-' }}</div>
+          <div>{{ e.start_datetime | date:'short' }}</div>
+          <div><span class="badge" [class]="e.suspended===1 ? 'badge-past': 'badge-upcoming'">{{e.suspended===1 ? 'Yes' : 'No'}}</span></div>
+          <div class="actions">
+            <button class="btn" (click)="openEditModal(e)">Edit</button>
+            <button class="btn secondary" (click)="delete(e)">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div *ngIf="showModal" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <h3 class="h3" style="margin:0;">{{editingId ? 'Edit Event' : 'New Event'}}</h3>
+        <button class="btn secondary" (click)="closeModal()">×</button>
+      </div>
+
+      <form class="form" (ngSubmit)="submit()">
+        <div class="form-row">
+          <label for="ev_cat">Category <span class="required">*</span></label>
+          <select id="ev_cat" name="ev_cat" [(ngModel)]="form.category_id" required>
+            <option [ngValue]="null">-- Select --</option>
+            <option *ngFor="let c of categories" [ngValue]="c.id">{{c.name}}</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="ev_name">Name <span class="required">*</span></label>
+          <input id="ev_name" name="ev_name" type="text" [(ngModel)]="form.name" required maxlength="200" />
+        </div>
+        <div class="form-row">
+          <label for="ev_short">Short description</label>
+          <input id="ev_short" name="ev_short" type="text" [(ngModel)]="form.short_description" maxlength="255" />
+        </div>
+        <div class="form-row">
+          <label for="ev_desc">Description</label>
+          <textarea id="ev_desc" name="ev_desc" rows="3" [(ngModel)]="form.description"></textarea>
+        </div>
+
+        <div class="form-row">
+          <label for="ev_start">Start <span class="required">*</span></label>
+          <input id="ev_start" name="ev_start" type="datetime-local" [(ngModel)]="form.start_datetime" required />
+        </div>
+        <div class="form-row">
+          <label for="ev_end">End</label>
+          <input id="ev_end" name="ev_end" type="datetime-local" [(ngModel)]="form.end_datetime" />
+        </div>
+
+        <div class="form-row">
+          <label for="ev_city">City</label>
+          <input id="ev_city" name="ev_city" type="text" [(ngModel)]="form.location_city" maxlength="120" />
+        </div>
+        <div class="form-row">
+          <label for="ev_venue">Venue</label>
+          <input id="ev_venue" name="ev_venue" type="text" [(ngModel)]="form.location_venue" maxlength="200" />
+        </div>
+        <div class="form-row">
+          <label for="ev_addr">Address</label>
+          <input id="ev_addr" name="ev_addr" type="text" [(ngModel)]="form.address_line" maxlength="255" />
+        </div>
+
+        <div class="form-row">
+          <label for="ev_price">Ticket price</label>
+          <input id="ev_price" name="ev_price" type="number" min="0" step="0.01" [(ngModel)]="form.ticket_price" />
+        </div>
+        <div class="form-row">
+          <label for="ev_goal">Goal</label>
+          <input id="ev_goal" name="ev_goal" type="number" min="0" step="0.01" [(ngModel)]="form.goal_amount" />
+        </div>
+        <div class="form-row">
+          <label for="ev_progress">Progress</label>
+          <input id="ev_progress" name="ev_progress" type="number" min="0" step="0.01" [(ngModel)]="form.progress_amount" />
+        </div>
+        <div class="form-row">
+          <label for="ev_img">Image URL</label>
+          <input id="ev_img" name="ev_img" type="text" [(ngModel)]="form.image_url" maxlength="500" />
+        </div>
+        <div class="form-row">
+          <label for="ev_susp">Suspended</label>
+          <select id="ev_susp" name="ev_susp" [(ngModel)]="form.suspended">
+            <option [ngValue]="0">No</option>
+            <option [ngValue]="1">Yes</option>
+          </select>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn" type="submit" [disabled]="saving">{{editingId ? 'Update' : 'Create'}}</button>
+          <button class="btn secondary" type="button" (click)="closeModal()" [disabled]="saving">Cancel</button>
+        </div>
+      </form>
+
+      <div *ngIf="modalError" class="notice error">{{modalError}}</div>
+    </div>
+  </div>
+</section>
+
