@@ -1,1 +1,61 @@
-<p>admin-categories works!</p>
+<section>
+  <div class="table-desc" style="margin:6px 0 8px;">
+    <h2 class="h2" style="margin:0;">Categories</h2>
+    <div class="row-between">
+      <span class="pill">{{categories.length}} items</span>
+      <button type="submit" class="btn" (click)="openCreateModal()">Create</button>
+    </div>
+  </div>
+
+  <!-- List -->
+  <div class="card" style="margin-top:12px;">
+    <div class="table" role="table">
+      <div class="thead" role="row">
+        <div>ID</div>
+        <div>Name</div>
+        <div>Description</div>
+        <div>Actions</div>
+      </div>
+
+      <div class="tbody" role="rowgroup">
+        <div *ngFor="let c of categories;" role="row">
+          <div>{{c.id}}</div>
+          <div>{{c.name}}</div>
+          <div class="muted">{{c.description || '-'}}</div>
+          <div class="actions">
+            <button class="btn" (click)="openEditModal(c)">Edit</button>
+            <button class="btn secondary" (click)="delete(c)">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal -->
+  <div *ngIf="showModal" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <h3 class="h3" style="margin:0;">{{editingId ? 'Edit Category' : 'New Category'}}</h3>
+        <button class="btn secondary" (click)="closeModal()">×</button>
+      </div>
+
+      <form class="form" (ngSubmit)="submit()">
+        <div class="form-row">
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" [(ngModel)]="form.name" required maxlength="100" />
+        </div>
+        <div class="form-row">
+          <label for="desc">Description</label>
+          <input id="desc" name="desc" type="text" [(ngModel)]="form.description" maxlength="255" />
+        </div>
+        <div class="form-actions">
+          <button class="btn" type="submit" [disabled]="saving">{{editingId ? 'Update' : 'Create'}}</button>
+          <button class="btn secondary" type="button" (click)="closeModal()" [disabled]="saving">Cancel</button>
+        </div>
+      </form>
+
+      <div *ngIf="modalError" class="notice error">{{modalError}}</div>
+    </div>
+  </div>
+</section>

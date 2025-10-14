@@ -10,7 +10,7 @@ conn.connect();
 router.get('/', (req, res, next) => {
   const conn = db.getconnection();
   // SQL: Query all categories (sort by name)
-  conn.query('SELECT id, name FROM categories ORDER BY name ASC', (err, rows) => {
+  conn.query('SELECT id, name, description FROM categories ORDER BY name ASC', (err, rows) => {
     conn.end(); // Close the connection when finished
     if (err) return next(err); // Pass the error to next
     res.json(rows); // Successfully returns classified data
