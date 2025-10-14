@@ -294,7 +294,7 @@ router.put('/:id', (req, res, next) => {
 
   const params = [
     category_id, name, short_description, description, start_datetime, end_datetime, location_city,
-    location_venue, address_line, ticket_price, goal_amount, progress_amount, image_url, suspended, req.params.id
+    location_venue, address_line, ticket_price, goal_amount, progress_amount, image_url, suspended, id
   ];
 
   conn.execute(sql, params, (err, result) => {
@@ -313,6 +313,39 @@ router.put('/:id', (req, res, next) => {
     }
     // success updated
     res.status(204).send()
+  });
+});
+
+// delete event
+router.delete('/:id', (req, res, next) => {
+  const id = Number.parseInt(req.params.id, 10);
+  if (!Number.isFinite(id) || id <= 0) {
+    return res.status(400).json({
+      data: null,
+      error: { code: 'BAD_REQUEST', message: 'Invalid id' },
+    });
+  }
+
+  // delete event sql
+  const sql = `DELETE FROM events WHERE id = ?`;
+  conn.execute(sql, [id], (err, result) => {
+    if (err) {
+      // Referenced by registrations foreign key
+      if (err.code === 'ER_ROW_IS_REFERENCED_2' || err.code === 'ER_ROW_IS_REFERENCED') {
+        return res.status(409).json({
+          data: null,
+          error: {
+            code: 'EVENT_IN_USE',
+            message: 'Cannot delete: event has registrations or references'
+          }
+        });
+      }
+      return next(err);
+    }
+    res.json({
+      data: { id },
+      error: null
+    });
   });
 });
 
