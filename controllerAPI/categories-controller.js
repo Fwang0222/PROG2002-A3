@@ -17,4 +17,52 @@ router.get('/', (req, res, next) => {
   });
 });
 
+// create new category
+router.post('/', (req, res, next) => {
+  const { name, description } = req.body;
+
+  // require name
+  if (!name) {
+    res.status(400).json({
+      data: null,
+      error: { code: 'BAD_REQUEST', message: 'name is required' },
+    });
+  }
+  // name length should lower than 100
+  if (name.length > 100) {
+    res.status(400).json({
+      data: null,
+      error: { code: 'BAD_REQUEST', message: 'name too long (max 100)' },
+    });
+  }
+  // description length should lower than 255
+  if (description && description.length > 255) {
+    res.status(400).json({
+      data: null,
+      error: { code: 'BAD_REQUEST', message: 'description too long (max 255)' },
+    });
+  }
+
+  const sql = `INSERT INTO categories (name, description) VALUES (?, ?)`;
+  conn.execute(sql, [name, description], (err, result) => {
+    if (err) {
+      // Unique key conflict
+      if (err.code === 'ER_DUP_ENTRY') {
+        return res.status(409).json({
+          data: null,
+          error: {
+            code: 'DUPLICATE_NAME',
+            message: 'Category name already exists'
+          },
+        });
+      }
+      return next(err);
+    }
+    res.status(201).json({
+      data: { id: result.insertId, name, description },
+      error: null,
+    });
+  });
+});
+
 module.exports = router;
