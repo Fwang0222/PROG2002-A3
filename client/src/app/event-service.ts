@@ -55,8 +55,8 @@ export class EventService {
   }
 
   // get event by id
-  getEventById(id: number): Observable<Event | null> {
-    return  this.http.get<Event | null>(`${this.HOST}/api/events/${id}`)
+  getEventById(id: number): Observable<{ data: Event, error: string } | null> {
+    return this.http.get<{ data: Event, error: string } | null>(`${this.HOST}/api/events/${id}`)
   }
 
   // get all categories

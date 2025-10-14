@@ -15,43 +15,43 @@
   <section class="charity-and-causes">
     <a class="btn" href="/" style="margin-bottom: 12px; display:inline-block;">Back to Home</a>
 
-    <div id="loading" class="notice">Loading event…</div>
-    <div id="notfound" class="notice" hidden>Event not found.</div>
+    <div *ngIf="showLoading" id="loading" class="notice">Loading event…</div>
+    <div *ngIf="showNotFound" id="notfound" class="notice">Event not found.</div>
 
-    <article id="detail" class="card" hidden>
+    <article *ngIf="event" id="detail" class="card">
       <div id="banner">
-        <img id="img" class="thumb" alt="">
+        <img id="img" class="thumb" [src]="event!.image_url" [alt]="event!.name">
       </div>
 
       <div class="card-body">
         <div class="meta" style="margin-bottom:6px;">
-          <span id="status" class="badge">Status</span>
-          <span id="when">-</span>
-          <span id="where">-</span>
+          <span id="status" class="badge badge-{{getStatus(event)}}">{{getStatus(event)}}</span>
+          <span id="when">{{ event!.start_datetime | date:'medium'  }}</span>
+          <span id="where">{{ event!.location_city || '-' }}</span>
         </div>
 
-        <h1 id="title" class="title" style="font-size:22px;"></h1>
+        <h1 id="title" class="title" style="font-size:22px;">{{event!.name}}</h1>
 
-        <p id="shortdesc" class="muted" style="margin:6px 0 10px;"></p>
+        <p id="shortdesc" class="muted" style="margin:6px 0 10px;">{{event!.short_description}}</p>
 
-        <div id="desc" style="margin: 8px 0 10px; white-space: pre-line;"></div>
+        <div id="desc" style="margin: 8px 0 10px; white-space: pre-line;">{{event!.description}}</div>
 
         <div class="meta" style="margin-top:10px;flex-direction: column;font-size: 16px;">
-          <div><b>Venue:</b> <span id="venue">-</span></div>
-          <div><b>Address:</b> <span id="address">-</span></div>
-          <div><b>Ticket:</b> $<span id="price">0.00</span></div>
-          <div><b>Goal:</b> $<span id="goal">0.00</span></div>
-          <div><b>Raised:</b> $<span id="progress">0.00</span></div>
+          <div><b>Venue: </b> <span id="venue">{{event!.location_venue}}</span></div>
+          <div><b>Address: </b> <span id="address">{{event!.address_line}}</span></div>
+          <div><b>Ticket: </b> <span id="price">{{event!.ticket_price | currency}}</span></div>
+          <div><b>Goal: </b> <span id="goal">{{event!.goal_amount | currency}}</span></div>
+          <div><b>Raised: </b> <span id="progress">{{event!.progress_amount | currency}}</span></div>
 
           <div class="progress-container">
-            <div id="progress-bar" class="progress-bar"></div>
+            <div id="progress-bar" class="progress-bar" [style.width]="(event!.goal_amount > 0 ? (event!.progress_amount / event!.goal_amount * 100).toFixed(2) : 0) + '%'"></div>
           </div>
-          <p id="progress-text" class="progress-text"></p>
+          <p id="progress-text" class="progress-text">Progress: {{(event!.goal_amount > 0 ? (event!.progress_amount / event!.goal_amount * 100).toFixed(2) : 0)}}% of goal reached</p>
 
         </div>
 
         <div style="margin-top:12px;">
-          <button id="btn-register" class="btn" type="button">Register</button>
+          <button id="btn-register" class="btn" type="button" (click)="register()">Register</button>
         </div>
       </div>
     </article>
