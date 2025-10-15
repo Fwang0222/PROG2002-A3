@@ -4,6 +4,7 @@ import {ActivatedRoute, Router, RouterModule} from '@angular/router';
 import {Navigation} from '../navigation/navigation';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
+import {WeatherService} from '../weather-service';
 
 @Component({
   selector: 'app-registration',
@@ -26,11 +27,13 @@ export class Registration {
     phone: '',
     tickets_qty: 1
   };
+  weatherData: any;
 
   constructor(
     private eventService: EventService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private weatherService: WeatherService
   ) {
   }
 
@@ -47,6 +50,7 @@ export class Registration {
 
           if (res) {
             this.event = res.data
+            this.getWeather(this.event)
           } else {
             this.showNotFound = true
           }
@@ -119,5 +123,18 @@ export class Registration {
         this.errorMsg = err?.error?.error?.message || 'Unexpected error. Please try again later.';
       }
     });
+  }
+
+  // get event weather
+  getWeather(event: Event): void {
+    this.weatherService.getWeather(event.location_city, String(event.start_datetime))
+      .subscribe({
+        next: data => {
+          this.weatherData = data
+        },
+        error: err => {
+          console.log(err)
+        }
+      });
   }
 }

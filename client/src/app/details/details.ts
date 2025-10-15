@@ -3,6 +3,7 @@ import {Navigation} from '../navigation/navigation';
 import {ActivatedRoute, Router, RouterModule} from '@angular/router';
 import {EventService, Event} from '../event-service';
 import {CommonModule} from '@angular/common';
+import {WeatherService} from '../weather-service';
 
 @Component({
   selector: 'app-details',
@@ -14,11 +15,13 @@ export class Details implements OnInit {
   event: Event | null = null;
   showLoading = false
   showNotFound = false;
+  weatherData: any;
 
   constructor(
     private eventService: EventService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private weatherService: WeatherService
   ) {
   }
 
@@ -35,6 +38,7 @@ export class Details implements OnInit {
 
           if (res) {
             this.event = res.data
+            this.getWeather(this.event)
           } else {
             this.showNotFound = true
           }
@@ -58,5 +62,18 @@ export class Details implements OnInit {
   register(): void {
     // alert("Registration is under construction.")
     this.router.navigate(['/registration', this.event?.id])
+  }
+
+  // get event weather
+  getWeather(event: Event): void {
+    this.weatherService.getWeather(event.location_city, String(event.start_datetime))
+      .subscribe({
+        next: data => {
+          this.weatherData = data
+        },
+        error: err => {
+          console.log(err)
+        }
+      });
   }
 }

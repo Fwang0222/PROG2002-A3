@@ -29,6 +29,7 @@
               <span id="status" class="badge badge-{{getStatus(event)}}">{{getStatus(event)}}</span>
               <span id="when">{{ event!.start_datetime | date:'medium'  }}</span>
               <span id="where">{{ event!.location_city || '-' }}</span>
+              <span *ngIf="weatherData">Max {{ weatherData.temp_max }}°C / Min {{ weatherData.temp_min }}°C，Precipitation  {{ weatherData.precipitation }}mm</span>
             </div>
 
             <h1 id="title" class="title" style="font-size:22px;">{{event!.name}}</h1>
