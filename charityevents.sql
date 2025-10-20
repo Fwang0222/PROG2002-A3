@@ -2,7 +2,7 @@ CREATE TABLE categories (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL UNIQUE,
   description VARCHAR(255)
-)
+);
 
 CREATE TABLE events (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -27,7 +27,7 @@ CREATE TABLE events (
   INDEX idx_events_city (location_city),
   INDEX idx_events_cat (category_id),
   INDEX idx_events_suspended (suspended)
-)
+);
 
 CREATE TABLE registrations (
   id INT AUTO_INCREMENT PRIMARY KEY,

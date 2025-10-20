@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "client": {
+    "admin": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -27,7 +27,7 @@
             "styles": [
               "src/styles.css"
             ],
-            "baseHref": "/client/"
+            "baseHref": "/admin/"
           },
           "configurations": {
             "production": {
@@ -57,10 +57,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "client:build:production"
+              "buildTarget": "admin:build:production"
             },
             "development": {
-              "buildTarget": "client:build:development"
+              "buildTarget": "admin:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -91,6 +91,6 @@
     }
   },
   "cli": {
-    "analytics": "3518be01-ee7c-495e-bef5-d7c086ac8725"
+    "analytics": "6a5372d3-975d-47fc-b086-b48243e1ccb6"
   }
 }

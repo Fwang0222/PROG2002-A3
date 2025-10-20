@@ -1,0 +1,60 @@
+:host {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.heart {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  transform: rotate(45deg);
+  opacity: 0.8;
+  animation: fall 8s linear infinite, sway 3s ease-in-out infinite;
+}
+
+.heart::before,
+.heart::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: inherit;
+}
+
+.heart::before {
+  top: -8px;
+  left: 0;
+}
+
+.heart::after {
+  left: -8px;
+  top: 0;
+}
+
+/* fall animation */
+@keyframes fall {
+  0% {
+    transform: translateY(-10vh) rotate(45deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(110vh) rotate(405deg);
+    opacity: 0.1;
+  }
+}
+
+/* floating animation */
+@keyframes sway {
+  0%, 100% {
+    transform: rotate(45deg) translateX(0);
+  }
+  50% {
+    transform: rotate(45deg) translateX(20px);
+  }
+}
